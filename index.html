@@ -47,6 +47,22 @@
             position: relative;
         }
 
+        /* Logo 容器設定 - 控制 Logo 大小與位置 */
+        .logo-container {
+            width: 100%;
+            max-width: 400px;
+            /* 這裡控制 Logo 最大寬度 */
+            margin: 0 auto 20px auto;
+            /* 置中並與下方保持距離 */
+        }
+
+        /* 確保 SVG 圖片自適應容器寬度 */
+        .logo-container svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         /* 裝飾性垂直文字 */
         .vertical-text {
             position: fixed;
@@ -268,7 +284,35 @@
 
     <div class="container">
         <header>
-            <h1>小杰 3C 館</h1>
+            <!-- 這裡開始是 Logo -->
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150">
+                    <g fill="#2C2C2C"> <!-- Logo 顏色 -->
+                        <path
+                            d="M60,25 L110,25 L125,55 L110,85 L60,85 L45,55 Z M55,55 L65,75 L100,75 L90,55 L100,35 L65,35 Z" />
+                        <rect x="30" y="50" width="25" height="10" rx="2" />
+                        <rect x="115" y="50" width="25" height="10" rx="2" />
+                        <circle cx="85" cy="55" r="6" />
+                        <path d="M160,30 H200 V45 H175 V60 H195 V75 H175 V110 H160 Z" />
+                        <path
+                            d="M210,30 H225 V95 Q225,110 240,110 Q255,110 255,95 V30 H270 V95 Q270,125 240,125 Q210,125 210,95 Z" />
+                        <path d="M280,30 H320 V45 H307 V110 H292 V45 H280 Z" />
+                        <path
+                            d="M330,30 H345 V95 Q345,110 360,110 Q375,110 375,95 V30 H390 V95 Q390,125 360,125 Q330,125 330,95 Z" />
+                        <path
+                            d="M400,30 H430 Q450,30 450,55 Q450,75 435,80 L455,110 H438 L420,80 H415 V110 H400 Z M415,45 V65 H430 Q435,65 435,55 Q435,45 430,45 Z" />
+                        <path d="M465,30 H505 V45 H480 V62 H500 V77 H480 V95 H505 V110 H465 Z" />
+                    </g>
+                    <g fill="#2C2C2C" transform="translate(360, 0)">
+                        <path
+                            d="M160,30 H190 V45 H175 Q185,45 185,55 Q185,62 175,65 Q185,68 185,78 Q185,90 165,90 H160 V110 H165 Q200,110 200,78 Q200,65 190,58 Q200,52 200,40 Q200,30 160,30 Z" />
+                        <path
+                            d="M245,95 Q245,110 225,110 Q205,110 205,70 Q205,30 225,30 Q245,30 245,45 H260 Q260,15 225,15 Q190,15 190,70 Q190,125 225,125 Q260,125 260,95 Z" />
+                    </g>
+                </svg>
+            </div>
+            <!-- Logo 結束 -->
+
             <span class="sub-heading">Select Shop & Lifestyle</span>
         </header>
 
@@ -321,6 +365,22 @@
                     app.innerHTML = '<div class="msg-box" style="color:#A63737;"><h2>連線失敗</h2><p>請確認網址格式是否為 CSV</p></div>';
                 }
             });
+        }
+
+        // 處理圖片載入錯誤
+        function handleImageError(img) {
+            // 防止無限迴圈 (如果備用圖也壞掉)
+            if (img.dataset.hasError) return;
+            img.dataset.hasError = true;
+
+            // 設定備用圖片 (一張優雅的暫無圖片)
+            // 使用 Unsplash 的一張極簡風格圖片作為備用
+            img.src = 'https://images.unsplash.com/photo-1531297461136-82lw9z1q1j4d?w=500&q=80&auto=format&fit=crop';
+            img.alt = '暫無圖片';
+
+            // 也可以加上一點樣式讓它看起來不像壞掉
+            img.style.opacity = '0.8';
+            img.style.filter = 'grayscale(20%)';
         }
 
         function setupFilterButtons() {
@@ -378,7 +438,7 @@
                 const html = `
         <div class="card">
           <div class="card-img-container">
-             <img src="${img}" class="card-img" loading="lazy">
+             <img src="${img}" class="card-img" loading="lazy" onerror="handleImageError(this)">
              ${tagHtml}
           </div>
           <div class="card-info">
